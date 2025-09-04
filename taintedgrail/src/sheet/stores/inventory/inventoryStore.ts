@@ -26,6 +26,8 @@ export enum CategoryType {
   AWAKENING = 'Awakenings',
   RISE = 'Rises',
   ASCENSION = 'Ascensions',
+  TRAIT = 'Traits',
+  SPECIAL_ABILITY = 'Special Abilities',
 }
 
 export type Item = {
@@ -73,6 +75,10 @@ export type InventoryHydrate = {
     rises: Record<string, Item>;
     ascensions: Record<string, Item>;
     riches: number;
+
+    // NPC Only
+    traits: Record<string, Item>;
+    specialAbilities: Record<string, Item>;
   };
 };
 
@@ -91,6 +97,9 @@ export const useInventoryStore = defineStore('inventory', () => {
   const ascensions: Ref<Array<Item>> = ref([]);
   const riches: Ref<number> = ref(0);
 
+  const traits: Ref<Array<Item>> = ref([]);
+  const specialAbilities: Ref<Array<Item>> = ref([]);
+
   // Mapper to not need giant switch/if statement blocks.
   const categoryArrayMap = {
     [CategoryType.WEAPON]: weapons,
@@ -105,6 +114,8 @@ export const useInventoryStore = defineStore('inventory', () => {
     [CategoryType.AWAKENING]: awakenings,
     [CategoryType.RISE]: rises,
     [CategoryType.ASCENSION]: ascensions,
+    [CategoryType.TRAIT]: traits,
+    [CategoryType.SPECIAL_ABILITY]: specialAbilities,
   } as const;
 
   const createGenericItem = (item: any, categoryName: CategoryType): AnyItem => ({
@@ -235,6 +246,8 @@ export const useInventoryStore = defineStore('inventory', () => {
         rises: arrayToObject(rises.value),
         ascensions: arrayToObject(ascensions.value),
         riches: riches.value,
+        traits: arrayToObject(traits.value),
+        specialAbilities: arrayToObject(specialAbilities.value),
       },
     };
   };
@@ -254,6 +267,8 @@ export const useInventoryStore = defineStore('inventory', () => {
     rises.value = objectToArray(hydrateStore.inventory.rises) || rises.value;
     ascensions.value = objectToArray(hydrateStore.inventory.ascensions) || ascensions.value;
     riches.value = hydrateStore.inventory.riches || riches.value;
+    traits.value = objectToArray(hydrateStore.inventory.traits) || traits.value;
+    specialAbilities.value = objectToArray(hydrateStore.inventory.specialAbilities) || specialAbilities.value;
   };
 
   return {
@@ -270,7 +285,8 @@ export const useInventoryStore = defineStore('inventory', () => {
     rises,
     ascensions,
     riches,
-
+    traits,
+    specialAbilities,
     addItem,
     removeItem,
     dehydrate,

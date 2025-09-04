@@ -1,18 +1,13 @@
 import type { DiceComponent } from '@/rolltemplates/rolltemplates';
 import { useCharacterStore } from '@/sheet/stores/character/characterStore';
-import { type AnyItem, type Spell, type Weapon } from '@/sheet/stores/inventory/inventoryStore';
+import { useNPCStore } from '@/sheet/stores/character/npcStore';
+import { CategoryType, type AnyItem, type Spell, type Weapon } from '@/sheet/stores/inventory/inventoryStore';
+import { useMetaStore } from '@/sheet/stores/meta/metaStore';
 import { useWaysStore, type WaysScore } from '@/sheet/stores/ways/waysStore';
-import {
-  capitalizeFirstLetter,
-  domainToFriendlyName,
-  friendlyNameToDomain,
-  spellDisciplineToFriendlyName,
-} from '@/utility/formattedNames';
+import { capitalizeFirstLetter, domainToFriendlyName, friendlyNameToDomain, spellDisciplineToFriendlyName } from '@/utility/formattedNames';
 import rollToChat from '@/utility/rollToChat';
 import sendToChat from '@/utility/sendToChat';
 import sendUserError from '@/utility/sendUserError';
-
-
 
 // 1d10 + Way - Health Modifier
 export const wayRoll = async (way: WaysScore) => {
@@ -107,7 +102,7 @@ export const parryRoll = async () => {
   const healthModifier = rollHealthScore();
 
   let subtitle = '1d10 + Combativeness + Close Combat - Health Modifier';
-  let components: DiceComponent[] = [
+  const components: DiceComponent[] = [
     { label: 'Roll', sides: 10 },
     { label: 'Combativeness', value: waysScores.combativeness },
     { label: 'Close Combat', value: domains.closeCombat.base },
@@ -169,7 +164,7 @@ export const weaponRoll = async (item: Weapon) => {
   else if (fightingStance === 'offensive') stanceModifier = potential;
 
   let subtitle = `1d10 + Combativeness + ${labelToUse} - Health Modifier`;
-  let components: DiceComponent[] = [
+  const components: DiceComponent[] = [
     { label: 'Roll', sides: 10 },
     { label: 'Combativeness', value: combativeness },
     { label: labelToUse, value: scoreToUse },
@@ -229,6 +224,53 @@ export const magicRoll = async (item: Spell) => {
       { label: 'Health Modifier', value: -healthModifier, negative: true },
     ],
   });
+};
+
+export const npcAttackRoll = async () => {
+  const { attack, rollHealthScore } = useNPCStore();
+  const healthModifier = rollHealthScore();
+  const { name } = useMetaStore();
+  await rollToChat({
+    title: `${name}: Attack Roll`,
+    subtitle: '1d10 + Attack - Health Modifier',
+    allowCrit: false,
+    components: [
+      { label: 'Roll', sides: 10 },
+      { label: 'Attack', value: attack || 0 },
+      { label: 'Health Modifier', value: -healthModifier, negative: true },
+    ],
+  });
+};
+
+export const genericNpcDomainRoll = async (value: number, domain: string) => {
+  const { rollHealthScore } = useNPCStore();
+  const healthModifier = rollHealthScore();
+  const { name } = useMetaStore();
+  await rollToChat({
+    title: `${name}: ${domain} Roll`,
+    subtitle: `1d10 + ${domain} - Health Modifier`,
+    allowCrit: false,
+    components: [
+      { label: 'Roll', sides: 10 },
+      { label: `${domain}`, value: value },
+      { label: 'Health Modifier', value: -healthModifier, negative: true },
+    ],
+  });
+};
+
+export const npcDefenseRoll = async () => {
+  const { defense, protection } = useNPCStore();
+  const { name } = useMetaStore();
+  // Convert defense/protection to a mock item.
+  const mockItem: AnyItem = {
+    _id: '1',
+    name: `${name}: Defense`,
+    description: `Defense: ${defense || 0}\nProtection: ${protection || 0}`,
+    type: CategoryType.TRAIT,
+    quantity: 1,
+    icon: '',
+  };
+  sendItemToChat(mockItem);
 };
 
 export const sendItemToChat = async (item: AnyItem) => {

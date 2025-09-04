@@ -1,6 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import SheetView from '../views/SheetView.vue';
-import SettingsView from '../views/SettingsView.vue';
+import SheetContainer from '../views/SheetContainer.vue';
 
 /*
  * Vue Router is used for switching between the 2 different views in the sheet.
@@ -13,13 +12,8 @@ const router = createRouter({
     {
       path: '/sheet',
       name: 'sheet',
-      component: SheetView,
+      component: SheetContainer,
       alias: '/',
-    },
-    {
-      path: '/settings',
-      name: 'settings',
-      component: SettingsView,
     },
   ],
 });

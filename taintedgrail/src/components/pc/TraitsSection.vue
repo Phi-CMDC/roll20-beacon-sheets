@@ -58,7 +58,7 @@
 
 <script setup lang="ts">
 import { useInventoryStore } from '@/sheet/stores/inventory/inventoryStore';
-import Item from './parts/Item.vue';
+import Item from '../parts/Item.vue';
 
 const inventory = useInventoryStore();
 </script>
