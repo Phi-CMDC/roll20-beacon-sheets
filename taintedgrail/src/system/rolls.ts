@@ -227,11 +227,11 @@ export const magicRoll = async (item: Spell) => {
 };
 
 export const npcAttackRoll = async () => {
-  const { attack, rollHealthScore } = useNPCStore();
+  const { attack, damage, rollHealthScore } = useNPCStore();
   const healthModifier = rollHealthScore();
   const { name } = useMetaStore();
   await rollToChat({
-    title: `${name}: Attack Roll`,
+    title: `${name}: Attack Roll (Damage: ${damage})`,
     subtitle: '1d10 + Attack - Health Modifier',
     allowCrit: false,
     components: [
