@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from 'vue-router';
+import { createRouter, createMemoryHistory } from 'vue-router';
 import SheetContainer from '../views/SheetContainer.vue';
 
 /*
@@ -7,7 +7,7 @@ import SheetContainer from '../views/SheetContainer.vue';
  * */
 const router = createRouter({
   // @ts-ignore
-  history: createWebHistory(import.meta.env.BASE_URL),
+  history: createMemoryHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/sheet',
