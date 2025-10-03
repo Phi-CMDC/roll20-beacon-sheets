@@ -185,7 +185,7 @@ const updateDisciplineScore = (disciplineId: string, newScore: number) => {
 }
 
 .modal-body {
-  max-height: 650px;
+  max-height: 90vh;
   overflow-y: auto;
 }
 
