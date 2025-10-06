@@ -179,14 +179,18 @@ export const weaponRoll = async (item: Weapon) => {
     components.push({ label: 'Health Modifier', value: -healthModifier, negative: true });
   }
 
-  const damageInfo = 'Damage: Attack Roll + Weapon Damage - Defense - Protection';
-
-  await rollToChat({
+  const rollResult = await rollToChat({
     title: `Weapon Roll: ${item.name}`,
     subtitle: subtitle,
-    textContent: damageInfo,
     allowCrit: true,
     components: components,
+  });
+
+  const damageInfo = `Roll Result (${rollResult}) + Weapon Damage (${item.damage}) - Defense - Protection`;
+  // Send roll damage formula to chat.
+  await sendToChat({
+    title: 'Damage Formula',
+    textContent: damageInfo,
   });
 };
 
