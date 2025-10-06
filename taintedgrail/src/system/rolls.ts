@@ -163,7 +163,7 @@ export const weaponRoll = async (item: Weapon) => {
   if (fightingStance === 'defensive') stanceModifier = -potential;
   else if (fightingStance === 'offensive') stanceModifier = potential;
 
-  let subtitle = `1d10 + Combativeness + ${labelToUse} - Health Modifier`;
+  let subtitle = `Attack: 1d10 + Combativeness + ${labelToUse} - Health Modifier`;
   const components: DiceComponent[] = [
     { label: 'Roll', sides: 10 },
     { label: 'Combativeness', value: combativeness },
@@ -172,16 +172,19 @@ export const weaponRoll = async (item: Weapon) => {
 
   // Add stance modifier if it's not 0.
   if (stanceModifier !== 0) {
-    subtitle = `1d10 + Combativeness + ${labelToUse} ${stanceModifier < 0 ? '-' : '+'} Stance Modifier - Health Modifier`;
+    subtitle = `Attack: 1d10 + Combativeness + ${labelToUse} ${stanceModifier < 0 ? '-' : '+'} Stance Modifier - Health Modifier`;
     components.push({ label: 'Health Modifier', value: -healthModifier, negative: true });
     components.push({ label: `Stance Modifier (${currentFightingStance})`, value: stanceModifier, negative: stanceModifier < 0 });
   } else {
     components.push({ label: 'Health Modifier', value: -healthModifier, negative: true });
   }
 
+  const damageInfo = 'Damage: Attack Roll + Weapon Damage - Defense - Protection';
+
   await rollToChat({
     title: `Weapon Roll: ${item.name}`,
     subtitle: subtitle,
+    textContent: damageInfo,
     allowCrit: true,
     components: components,
   });

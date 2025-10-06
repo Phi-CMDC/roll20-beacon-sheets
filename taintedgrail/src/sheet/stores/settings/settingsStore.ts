@@ -1,7 +1,6 @@
 import { defineStore } from 'pinia';
 import { ref, type Ref } from 'vue';
 
-
 export type SettingsHydrate = {
   settings: {
     actorType: string | null;
@@ -30,7 +29,7 @@ export const useSettingsStore = defineStore('settings', () => {
    * Since the items array is coming is an object, we convert it back into an array before saving here.
    * */
   const hydrate = (hydrateStore: SettingsHydrate) => {
-    actorType.value = hydrateStore.settings?.actorType || actorType.value;
+    actorType.value = hydrateStore.settings?.actorType ?? actorType.value;
   };
 
   return {
