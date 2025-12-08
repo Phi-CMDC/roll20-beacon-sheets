@@ -204,7 +204,7 @@ export const magicRoll = async (item: Spell) => {
   const disciplineScore = getDisciplineByName(item.discipline)?.base || 0;
 
   // Get the parent domain of the spell discipline (which should always be magic, realistically)
-  const parentDomain = getDisciplineByName(item.discipline)?.parentDomain;
+  const parentDomain = getDisciplineByName(friendlySpellDiscipline)?.parentDomain;
 
   // It could be that the player (for some reason) removed the discipline needed from their sheet, but still has the spell.
   if (!parentDomain) {
